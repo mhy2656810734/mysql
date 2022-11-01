@@ -1,0 +1,6 @@
+create table goods (
+    goods_name varchar(50),
+    goods_price int,
+    goods_num int,
+    goods_type varchar(50)
+    );
