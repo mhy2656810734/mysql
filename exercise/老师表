@@ -1,0 +1,9 @@
+create table teacher(
+    name varchar(20),
+    age int,
+    height int,
+    sex varchar(5),
+    degree varchar(50),
+    birthday varchar(20),
+    id_number varchar(20)
+);
