@@ -1,0 +1,45 @@
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/**
+ * 选择查询
+ * @author 26568
+ * @date 2022-11-19 14:57
+ */
+public class JdbcSelectDemo {
+    public static void main(String[] args) throws SQLException {
+        // 1.连接数据源
+        DataSource dataSource = new MysqlDataSource();
+        ((MysqlDataSource)dataSource).setURL("jdbc:mysql://127.0.0.1:3306/java106_1?characterEncoding=utf8&useSSL=false");
+        ((MysqlDataSource)dataSource).setUser("root");
+        ((MysqlDataSource)dataSource).setPassword("weiaizuqiu1314");
+        // 2.连接数据库
+        Connection connection = dataSource.getConnection();
+        // 3.创建sql
+        String sql = "select * from student";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        // 4.执行sql
+        // 结果集合
+        ResultSet resultSet = statement.executeQuery();
+        // 遍历集合
+        while (resultSet.next()) {
+            // next相当于移动一下光标,移动到末尾返回false
+            // 使用getXXX 来获取每一列
+            // 获取int  就是要getInt  获取String 就使用getString
+            // getXXX方法的参数就是数据库表的列名
+            int id = resultSet.getInt("id");
+            String name = resultSet.getString("name");
+            System.out.println(id+":"+name);
+        }
+        // 释放资源
+        resultSet.close();
+        statement.close();
+        connection.close();
+
+    }
+}
