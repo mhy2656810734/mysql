@@ -1,0 +1,48 @@
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+/**
+ * @author 26568
+ * @date 2022-11-19 14:18
+ */
+public class JdbcInsertDemo {
+    public static void main(String[] args) throws SQLException {
+        // 1.创建数据源,描述数据路在哪里
+        DataSource dataSource = new MysqlDataSource();
+                                                        // IP地址     端口号  数据库名   设置字符编码方式          关闭加密功能
+        ((MysqlDataSource)dataSource).setURL("jdbc:mysql://127.0.0.1:3306/java106_1?characterEncoding=utf8&useSSL=false");
+        // 用户名
+        ((MysqlDataSource)dataSource).setUser("root");
+        // 用户密码
+        ((MysqlDataSource)dataSource).setPassword("weiaizuqiu1314");
+        // 2.和数据库建立连接
+        Connection connection = dataSource.getConnection();// 抛出异常 让JVM自己处理异常
+        // 3.构造SQL语句
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("请输入学号");
+        int id = scanner.nextInt();
+        System.out.println("请输入姓名");
+        String name = scanner.next();
+       // String sql = "insert into student values(2,'李四')";
+        String sql = "insert into student values(?,?)";
+        //JDBC 中,还需要搭配一个特定的对象,来描述这里的sql情况
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setInt(1,id); // 前面数字代表第几个占位符(?)
+        statement.setString(2,name);
+        // 4.执行SQL 针对 增删改 使用executeUpdate 来执行
+                     // 查    使用executeQuery   来执行
+        // 返回结果的含义是,这个操作影响了几行
+        int ret = statement.executeUpdate();
+        System.out.println("ret = "+ret);
+        // 5.断开连接,关闭资源
+        scanner.close();
+        statement.close();
+        connection.close();
+
+    }
+}
