@@ -1,0 +1,26 @@
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+/**
+ * @author 26568
+ * @date 2022-11-19 19:25
+ */
+public class JdbcDeleteDemo {
+    public static void main(String[] args) throws SQLException {
+        DataSource dataSource = new MysqlDataSource();
+        ((MysqlDataSource)dataSource).setURL("jdbc:mysql://127.0.0.1:3306/java106_1?characyteEncoding=utf8&useSSL=false");
+        ((MysqlDataSource)dataSource).setUser("root");
+        ((MysqlDataSource)dataSource).setPassword("weiaizuqiu1314");
+        Connection connection = dataSource.getConnection();
+        String sql = "delete from student where name = '李四'";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        int ret = statement.executeUpdate();
+        System.out.println("ret = "+ret);
+        statement.close();
+        connection.close();
+    }
+}
