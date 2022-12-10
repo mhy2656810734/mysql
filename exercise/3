@@ -1,0 +1,47 @@
+
+
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
+import javax.sql.DataSource;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+/**
+ * @author 26568
+ * @date 2022-12-09 10:43
+ */
+public class JdbcInsert {
+    public static void main(String[] args) throws SQLException {
+        // 先提前准备好数据库和数据表
+        // 1).`创建数据源. 描述了数据库服务器在哪里
+        DataSource dataSource = new MysqlDataSource();
+        ((MysqlDataSource)dataSource).setURL("jdbc:mysql://127.0.0.1:3306/exercise?characterEncoding=utf8&useSSL=false");
+        ((MysqlDataSource)dataSource).setUser("root");
+        ((MysqlDataSource)dataSource).setPassword("你的密码");
+        //2).和数据库建立网络连接(写的jdbc代码本质上是实现了一个客户端,要通过网络和服务器通信)
+        Connection connection = dataSource.getConnection();
+        //3).构造一个SQL语句,来完成操作
+        String str = "select * from student";
+        // jdbc 中还需要搭配一个特点的对象,来描述这里的sql情况
+        PreparedStatement statement = connection.prepareStatement(str);
+        //4).执行SQL语句.(控制客户端给服务器发送请求)
+        ResultSet resultSet = statement.executeQuery();
+        // 判断是否有下一个数据
+        while (resultSet.next()) {
+            // 使用getXXX 方法获取到每一行
+            // 获取int 就使用getInt  获取String 就使用getString.....
+            int id = resultSet.getInt("id");
+            String name = resultSet.getString("name");
+            System.out.println("id:"+id+" "+"name:"+name);
+        }
+        //5).断开和数据库的连接,并且释放资源
+        resultSet.close();
+        statement.close();
+        connection.close();
+    }
+}
