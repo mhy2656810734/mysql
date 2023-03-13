@@ -1,0 +1,39 @@
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+/**
+ * @author 26568
+ * @date 2023-03-13 16:45
+ */
+public class JdbcSearch {
+    public static void main(String[] args) throws SQLException {
+        // 1.描述数据源
+        DataSource dataSource = new MysqlDataSource();
+        ((MysqlDataSource)dataSource).setURL("jdbc:mysql://127.0.0.1:3306/exercise1?characterEncoding=utf8&useSSL=false");
+        ((MysqlDataSource)dataSource).setUser("root");
+        ((MysqlDataSource)dataSource).setPassword("weiaizuqiu1314");
+        // 2.和数据库服务器建立连接
+        Connection connection = dataSource.getConnection();
+        // 3.构造sql语句
+        String str = "select* from student";
+        // 还需要搭配一个特定的对象来描述这里的sql情况
+        PreparedStatement statement = connection.prepareStatement(str);
+        // 4.执行sql语句
+        ResultSet resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            int id = resultSet.getInt("id");
+            String name = resultSet.getString("name");
+            System.out.println("id:"+id+"name:"+name);
+        }
+        // 5.关闭资源
+        resultSet.close();
+        statement.close();
+        connection.close();
+    }
+}
